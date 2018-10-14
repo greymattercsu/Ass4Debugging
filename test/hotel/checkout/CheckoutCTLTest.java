@@ -9,8 +9,8 @@ import hotel.HotelHelper;
 import hotel.entities.Hotel;
 import hotel.entities.ServiceType;
 import hotel.service.RecordServiceCTL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -24,7 +24,7 @@ import org.junit.Test;
  */
 public class CheckoutCTLTest {
 
-    private Object outContent;
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
     public CheckoutCTLTest() {
     }
@@ -39,6 +39,8 @@ public class CheckoutCTLTest {
 
     @Before
     public void setUp() {
+        System.setOut(new PrintStream(outContent));
+
     }
 
     @After
@@ -57,20 +59,18 @@ public class CheckoutCTLTest {
         CheckoutCTL instance = new CheckoutCTL(hotel);
         instance.roomIdEntered(roomId);
         String actualString = outContent.toString();
-        String actualTotalString = actualString.substring(actualString.indexOf("Total")+ 8);
+        String actualTotalString = actualString.substring(actualString.indexOf("Total") + 8);
         double actualTotal = Double.parseDouble(actualTotalString);
         assertEquals(total, actualTotal, 0);
-       
-
 
     }
-    
-   /**
+
+    /**
      * Test of roomIdEntered method, of class CheckoutCTL.
      */
-   @Test
-   public void testCheckOutAndChargeRoom() throws Exception {
-       int roomId = 201;
+    @Test
+    public void testCheckOutAndChargeRoom() throws Exception {
+        int roomId = 201;
         double costRestaurant = 50.00;
         double costRoomService = 7.00;
         double total = costRestaurant + costRoomService;
@@ -78,15 +78,14 @@ public class CheckoutCTLTest {
         RecordServiceCTL recordService = new RecordServiceCTL(hotel);
         recordService.roomNumberEntered(roomId);
         recordService.serviceDetailsEntered(ServiceType.RESTAURANT, costRestaurant);
-        
+
         CheckoutCTL instance = new CheckoutCTL(hotel);
         instance.roomIdEntered(roomId);
         String actualString = outContent.toString();
-        String actualTotalString = actualString.substring(actualString.indexOf("Total")+ 8);
+        String actualTotalString = actualString.substring(actualString.indexOf("Total") + 8);
         double actualTotal = Double.parseDouble(actualTotalString);
         assertEquals(total, actualTotal, 0);
 
-   }
-
+    }
 
 }
