@@ -5,11 +5,15 @@
  */
 package hotel.checkout;
 
+import hotel.HotelHelper;
 import hotel.entities.Hotel;
 import hotel.entities.ServiceType;
 import hotel.service.RecordServiceCTL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,6 +23,8 @@ import org.junit.Test;
  * @author Meinong
  */
 public class CheckoutCTLTest {
+
+    private Object outContent;
 
     public CheckoutCTLTest() {
     }
@@ -45,22 +51,42 @@ public class CheckoutCTLTest {
     @Test
     public void testRoomIdEntered() throws Exception {
 
-
-        System.out.println("Checking out after adding service");
-        Hotel hotel = new Hotel();
         int roomId = 201;
-        hotel.checkout(roomId);
+        double total = 7.00;
+        Hotel hotel = HotelHelper.loadHotel();
+        CheckoutCTL instance = new CheckoutCTL(hotel);
+        instance.roomIdEntered(roomId);
+        String actualString = outContent.toString();
+        String actualTotalString = actualString.substring(actualString.indexOf("Total")+ 8);
+        double actualTotal = Double.parseDouble(actualTotalString);
+        assertEquals(total, actualTotal, 0);
+       
 
-        System.out.println("Service details for testing");
-        ServiceType serviceType = ServiceType.ROOM_SERVICE;
-        double cost = 50.0;
-
-        RecordServiceCTL instance = new RecordServiceCTL(hotel);
-        instance.roomNumberEntered(roomId);
-        instance.serviceDetailsEntered(serviceType, cost);
-        
-        System.out.println("Total for room is 0.00");
 
     }
+    
+   /**
+     * Test of roomIdEntered method, of class CheckoutCTL.
+     */
+   @Test
+   public void testCheckOutAndChargeRoom() throws Exception {
+       int roomId = 201;
+        double costRestaurant = 50.00;
+        double costRoomService = 50.00;
+        double total = costRestaurant + costRoomService;
+        Hotel hotel = HotelHelper.loadHotel();
+        RecordServiceCTL recordService = new RecordServiceCTL(hotel);
+        recordService.roomNumberEntered(roomId);
+        recordService.serviceDetailsEntered(ServiceType.RESTAURANT, costRestaurant);
+        
+        CheckoutCTL instance = new CheckoutCTL(hotel);
+        instance.roomIdEntered(roomId);
+        String actualString = outContent.toString();
+        String actualTotalString = actualString.substring(actualString.indexOf("Total")+ 8);
+        double actualTotal = Double.parseDouble(actualTotalString);
+        assertEquals(total, actualTotal, 0);
+
+   }
+
 
 }
