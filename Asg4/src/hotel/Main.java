@@ -31,6 +31,8 @@ public class Main {
 				case "C" : 
 					checkin();
 					break;
+					
+				case "R" : 
 					recordService();
 					break;
 					
