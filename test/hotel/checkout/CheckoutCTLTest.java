@@ -72,7 +72,7 @@ public class CheckoutCTLTest {
    public void testCheckOutAndChargeRoom() throws Exception {
        int roomId = 201;
         double costRestaurant = 50.00;
-        double costRoomService = 50.00;
+        double costRoomService = 7.00;
         double total = costRestaurant + costRoomService;
         Hotel hotel = HotelHelper.loadHotel();
         RecordServiceCTL recordService = new RecordServiceCTL(hotel);
